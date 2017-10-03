@@ -1,37 +1,40 @@
 function sym(args) {
   //create an array of arguments Objects
   args = [].slice.call(arguments);
-  var arr = [];
-  //console.log(args);
-  var flattened = args.reduce(function(a, b) {
-    return a.concat(b);
-  }, []);
-  console.log(flattened)
+  //console.log(args)
+  var previousArray;
 
-  function removeValue(value){
-    var index = flattened.indexOf(value);
-    console.log('Index', index, value)
-    if(i != -1) {
-	    flattened.splice(index, 1);
+  function logArrayElements(element, index) {
+    var storeArr = [];
+    // store the first array
+    if(index === 0){
+      previousArray = element;
     }
-  }
-  
-  for (var i = 0; i < flattened.length; i++) {
-    var count = 0;
-    for(var j = 0; j < flattened.length; j++) {
-      if(flattened[i] == flattened[j]){
-        count += 1;
+    // check if there is not values in both arrays
+    // if true push to a previous array
+    else if(index > 0){
+      for(i = 0; i < element.length; i++){
+        if(!previousArray.includes(element[i])){
+          storeArr.push(element[i])
+        }
       }
-    }
-    if(count == 1){
-      arr.push(flattened[i])
-    } else if(count == 3 && !arr.includes(flattened[i])){
-      arr.push(flattened[i])
+      for(i = 0; i < previousArray.length; i++){
+        if(!element.includes(previousArray[i])){
+          storeArr.push(previousArray[i])
+        }
+      }
+      previousArray = storeArr;
     }
   }
-  console.log(arr);
-  //return arr;
-  
+
+  args.forEach(logArrayElements);
+  //console.log(previousArray)
+  // remove duplicated values
+  var uniqueArray = previousArray.filter(function(elem, index, self) {
+    return index == self.indexOf(elem);
+  })
+  console.log(uniqueArray)
+  return uniqueArray;
 }
 sym([1, 2, 3], [5, 2, 1, 4]);
 sym([1, 2, 5], [2, 3, 5], [3, 4, 5]);
